@@ -79,11 +79,11 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-      new JoystickButton(m_driverController, Button.kL1.value)
+      new JoystickButton(m_driverController, XboxController.Button.kStart.value)
           .whileTrue(new InstantCommand(
             m_robotDrive::zeroHeading, 
             m_robotDrive));

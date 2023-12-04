@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -36,6 +37,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private ShuffleboardTab m_telopOutput;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -46,13 +48,16 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    //m_telopOutput.addDouble("Gyro Yaw: ", m_robotDrive::getHeading);
+
+
     configureButtonBindings();
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
+       new RunCommand(
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
@@ -79,14 +84,14 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
-      new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-          .whileTrue(new InstantCommand(
-            m_robotDrive::zeroHeading, 
-            m_robotDrive));
+    // new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+    //     .whileTrue(new RunCommand(
+    //         () -> m_robotDrive.setX(),
+    //         m_robotDrive));
+    //   new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+    //       .whileTrue(new InstantCommand(
+    //         m_robotDrive::zeroHeading, 
+    //         m_robotDrive));
   }
 
   /**
@@ -133,5 +138,9 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+  }
+
+  public double getRobotHeading(){
+    return m_robotDrive.getHeading();
   }
 }
